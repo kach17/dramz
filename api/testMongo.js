@@ -8,8 +8,8 @@ module.exports = async (req, res) => {
 
     let client;
     try {
-        console.log('Connecting to MongoDB');
-        client = await MongoClient.connect(MONGODB_URI);
+        console.log('Attempting to connect to MongoDB');
+        client = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
         console.log('Connected to MongoDB');
 
         const db = client.db('kdrama_tracker');
@@ -19,7 +19,12 @@ module.exports = async (req, res) => {
         res.status(200).json({ message: 'MongoDB connection successful', collections });
     } catch (error) {
         console.error('Error in testMongo:', error);
-        res.status(500).json({ message: 'An error occurred', error: error.toString() });
+        res.status(500).json({ 
+            message: 'An error occurred', 
+            error: error.toString(),
+            stack: error.stack,
+            mongodbUri: MONGODB_URI ? 'Set' : 'Not set'
+        });
     } finally {
         if (client) {
             await client.close();
