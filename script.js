@@ -1,15 +1,19 @@
 document.getElementById('addDramaForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const tmdbId = document.getElementById('tmdbId').value;
+    console.log('Submitting TMDB ID:', tmdbId);
     
     try {
+        console.log('Sending POST request to /api/addDrama');
         const response = await fetch('/api/addDrama', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ tmdbId })
         });
         
+        console.log('Response status:', response.status);
         const data = await response.json();
+        console.log('Response data:', data);
         
         if (response.ok) {
             alert('Drama added successfully!');
@@ -25,9 +29,12 @@ document.getElementById('addDramaForm').addEventListener('submit', async (e) => 
 });
 
 async function loadDramas() {
+    console.log('Loading dramas');
     try {
         const response = await fetch('/api/getDramas');
+        console.log('getDramas response status:', response.status);
         const dramas = await response.json();
+        console.log('Dramas loaded:', dramas);
         
         const dramaList = document.getElementById('dramaList');
         dramaList.innerHTML = '';
