@@ -9,15 +9,18 @@ document.getElementById('addDramaForm').addEventListener('submit', async (e) => 
             body: JSON.stringify({ tmdbId })
         });
         
+        const data = await response.json();
+        
         if (response.ok) {
             alert('Drama added successfully!');
             loadDramas();
         } else {
-            alert('Failed to add drama');
+            alert(`Failed to add drama: ${data.message}`);
+            console.error('Error details:', data.error);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred');
+        alert('An error occurred while adding the drama');
     }
 });
 
@@ -40,7 +43,8 @@ async function loadDramas() {
             dramaList.appendChild(dramaCard);
         });
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error loading dramas:', error);
+        alert('An error occurred while loading dramas');
     }
 }
 
