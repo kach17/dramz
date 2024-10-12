@@ -33,7 +33,22 @@ async function loadDramas() {
     try {
         const response = await fetch('/api/getDramas');
         console.log('getDramas response status:', response.status);
-        const dramas = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const text = await response.text();
+        console.log('Response text:', text);
+        
+        let dramas;
+        try {
+            dramas = JSON.parse(text);
+        } catch (e) {
+            console.error('Error parsing JSON:', e);
+            throw new Error('Invalid JSON response');
+        }
+        
         console.log('Dramas loaded:', dramas);
         
         const dramaList = document.getElementById('dramaList');
@@ -51,7 +66,7 @@ async function loadDramas() {
         });
     } catch (error) {
         console.error('Error loading dramas:', error);
-        alert('An error occurred while loading dramas');
+        alert('An error occurred while loading dramas: ' + error.message);
     }
 }
 
